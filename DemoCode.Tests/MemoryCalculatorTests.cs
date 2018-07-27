@@ -5,30 +5,32 @@ using Xunit.Abstractions;
 
 namespace DemoCode.Tests
 {
-    public class MemoryCalculatorTests : IDisposable
+    public class MemoryCalculatorTests : IClassFixture<MemoryCalculatorFixture>
     {
         private readonly ITestOutputHelper _testOutputHelper;
-        private MemoryCalculator _sut;
+        private readonly MemoryCalculatorFixture _fixture;
 
-        public MemoryCalculatorTests(ITestOutputHelper testOutputHelper)
+        public MemoryCalculatorTests(ITestOutputHelper testOutputHelper, MemoryCalculatorFixture fixture)
         {
             _testOutputHelper = testOutputHelper;
-            _testOutputHelper.WriteLine("Creating the system under test");        
-            _sut = new MemoryCalculator();
+            _fixture = fixture;
+            _fixture.Sut.Clear();
         }
 
-        [Fact]
-        public void ShouldAdd()
+        [Theory]
+        [InlineData(5,5,10)]
+        [InlineData(2, 2, 4)]
+        public void ShouldAdd(int a, int b, int expectedResult)
         {
                                 
-            _testOutputHelper.WriteLine("Adding 15 to memoryCalculator");
-            _sut.Add(15);
+            _testOutputHelper.WriteLine($"Adding {a} to memoryCalculator");
+            _fixture.Sut.Add(a);
 
-            _testOutputHelper.WriteLine("Adding 15 more to memoryCalculator");
-            _sut.Add(15);        
+            _testOutputHelper.WriteLine($"Adding {b} more to memoryCalculator");
+            _fixture.Sut.Add(b);        
 
-            _testOutputHelper.WriteLine("30 was added to memoryCalculator");
-            Assert.Equal(30, _sut.CurrentValue);
+            _testOutputHelper.WriteLine($"{a+b} was added to memoryCalculator");
+            Assert.Equal(expectedResult, _fixture.Sut.CurrentValue);
                 
         }
 
@@ -37,13 +39,13 @@ namespace DemoCode.Tests
         {
 
             _testOutputHelper.WriteLine("Subtracting 10 from memoryCalculator");
-            _sut.Subtract(10);
+            _fixture.Sut.Subtract(10);
 
             _testOutputHelper.WriteLine("Subtracting 6 from memoryCalculator");
-            _sut.Subtract(6);
+            _fixture.Sut.Subtract(6);
 
             _testOutputHelper.WriteLine("16 was subtracted from memoryCalculator");
-            Assert.Equal(-16, _sut.CurrentValue);
+            Assert.Equal(-16, _fixture.Sut.CurrentValue);
 
         }
 
@@ -51,22 +53,15 @@ namespace DemoCode.Tests
         public void ShouldDivide()
         {
             _testOutputHelper.WriteLine("CurrentValue Receives 10");
-            _sut.Add(10);
+            _fixture.Sut.Add(10);
 
             _testOutputHelper.WriteLine("CurrentValue was divided by 2");
-            _sut.Divide(2);           
+            _fixture.Sut.Divide(2);           
 
             
-            Assert.Equal(5, _sut.CurrentValue);
+            Assert.Equal(5, _fixture.Sut.CurrentValue);
 
-        }
-
-        public void Dispose()
-        {
-            _testOutputHelper.WriteLine("Disposing the system under test to clean up resources");
-            _sut.Dispose();
-                
-        }
+        }     
         
     }
 }
