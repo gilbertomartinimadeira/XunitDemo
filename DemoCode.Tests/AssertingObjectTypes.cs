@@ -4,7 +4,7 @@ namespace DemoCode.Tests
 {
     public class AssertingObjectTypes
     {
-        [Fact]
+        [Fact]       
         public void ShouldCreateNormalEnemy_SimpleExample()
         {
 

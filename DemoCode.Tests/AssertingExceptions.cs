@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading;
 using Xunit;
 
 namespace DemoCode.Tests
 {
+    [Trait("Category", "Error Checking")]
     public class AssertingExceptions
     {
         
         [Fact]
-        [Trait("Category", "Error Checking")]
         public void ShouldErrorWhenDivideByZero()
         {
             var sut = new Calculator();
@@ -16,11 +17,12 @@ namespace DemoCode.Tests
         }
 
         [Fact]
-        [Trait("Category", "Error Checking")]
+        [Trait("Category", "Slow Running")]
         public void ShouldErrorWhenNumberTooBig()
         {
             var sut = new Calculator();
-        
+
+            Thread.Sleep(3000);
             var thrownException = Assert.Throws<ArgumentOutOfRangeException>(() => sut.Divide(201, 2));
 
             Assert.Equal("value", thrownException.ParamName);
